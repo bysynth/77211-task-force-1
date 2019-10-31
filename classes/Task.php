@@ -2,19 +2,19 @@
 
 class Task
 {
-    public const STATUS_NEW = 'Новое';
-    public const STATUS_CANCELED = 'Отменено';
-    public const STATUS_PROCESSING = 'В работе';
-    public const STATUS_DONE = 'Выполнено';
-    public const STATUS_FAILED = 'Провалено';
+    public const STATUS_NEW = 'new';
+    public const STATUS_CANCELED = 'canceled';
+    public const STATUS_PROCESSING = 'processing';
+    public const STATUS_DONE = 'done';
+    public const STATUS_FAILED = 'failed';
 
-    public const ACTION_CANCEL = 'Отменить';
-    public const ACTION_RESPOND = 'Откликнуться';
-    public const ACTION_DONE = 'Выполнено';
-    public const ACTION_REFUSE = 'Отказаться';
+    public const ACTION_CANCEL = 'cancel';
+    public const ACTION_RESPOND = 'respond';
+    public const ACTION_DONE = 'done';
+    public const ACTION_REFUSE = 'refuse';
 
-    public const ROLE_CUSTOMER = 'Заказчик';
-    public const ROLE_IMPLEMENTER = 'Исполнитель';
+    public const ROLE_CUSTOMER = 'customer';
+    public const ROLE_IMPLEMENTER = 'implementer';
 
     public const ACTION_STATUS_MAP = [
         self::ACTION_CANCEL => self::STATUS_CANCELED,
@@ -26,17 +26,25 @@ class Task
     private $customerId;
     private $implementerId;
     private $completionDate;
-    private $activeStatus;
+    private $activeStatus = self::STATUS_NEW;
 
-    public function __construct($customerId, $implementerId, $completionDate)
+    /**
+     * Task constructor.
+     * @param int $customerId
+     * @param int $implementerId
+     * @param string $completionDate
+     */
+    public function __construct(int $customerId, int $implementerId, string $completionDate)
     {
         $this->customerId = $customerId;
         $this->implementerId = $implementerId;
         $this->completionDate = $completionDate;
-        $this->activeStatus = self::STATUS_NEW;
     }
 
-    public function getStatusesList()
+    /**
+     * @return array
+     */
+    public function getStatusesList(): array
     {
         return [
             self::STATUS_NEW,
@@ -47,7 +55,10 @@ class Task
         ];
     }
 
-    public function getActionsList()
+    /**
+     * @return array
+     */
+    public function getActionsList(): array
     {
         return [
             self::ACTION_CANCEL,
@@ -57,12 +68,12 @@ class Task
         ];
     }
 
-    public function getNextStatus($action)
+    /**
+     * @param string $action
+     * @return string|null
+     */
+    public function getNextStatus(string $action): ?string
     {
-        if (in_array($action, $this->getActionsList(), true)) {
-            return self::ACTION_STATUS_MAP[$action];
-        }
-
-        return null;
+        return in_array($action, $this->getActionsList(), true) ? self::ACTION_STATUS_MAP[$action] : null;
     }
 }
