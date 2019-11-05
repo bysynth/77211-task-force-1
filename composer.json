@@ -1,0 +1,10 @@
+{
+  "name": "vladimir/task-force",
+  "type": "project",
+  "require": {},
+  "autoload": {
+    "psr-4": {
+      "App\\": "src/"
+    }
+  }
+}
