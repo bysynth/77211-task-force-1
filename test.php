@@ -1,6 +1,8 @@
 <?php
 
-require_once 'classes\Task.php';
+require_once 'vendor/autoload.php';
+
+use App\Models\Task;
 
 $test = new Task(1, 2, '2019-11-10');
 
