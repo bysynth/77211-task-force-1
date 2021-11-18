@@ -1,7 +1,7 @@
 # Личный проект «TaskForce»
 
 * Студент: [Владимир Казаков](https://up.htmlacademy.ru/yii/1/user/77211).
-* Наставник: [Денис Ходаковский](https://up.htmlacademy.ru/yii/1/user/1232355).
+* Наставник: [Сергей Парфенов](https://up.htmlacademy.ru/yii/1/user/926645).
 
 ---
 
