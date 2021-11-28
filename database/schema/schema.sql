@@ -1,8 +1,8 @@
-CREATE DATABASE IF NOT EXISTS taskforce
+CREATE DATABASE IF NOT EXISTS taskforce_77211
   DEFAULT CHARACTER SET utf8
   DEFAULT COLLATE utf8_general_ci;
 
-USE taskforce;
+USE taskforce_77211;
 
 CREATE TABLE categories
 (
@@ -17,6 +17,12 @@ CREATE TABLE cities
   name VARCHAR(255) NOT NULL
 );
 
+CREATE TABLE files
+(
+  id   INT PRIMARY KEY AUTO_INCREMENT,
+  path VARCHAR(255) NOT NULL
+);
+
 CREATE TABLE users
 (
   id                   INT PRIMARY KEY AUTO_INCREMENT,
@@ -25,13 +31,13 @@ CREATE TABLE users
   name                 VARCHAR(255)                            NOT NULL,
   birthdate            DATE                                    NULL,
   info                 TEXT                                    NULL,
-  avatar               VARCHAR(255)                            NULL,
+  avatar_file_id       INT                                     NULL,
   rating               DECIMAL(3, 2) DEFAULT 0                 NOT NULL,
   city_id              INT                                     NOT NULL,
   phone                VARCHAR(255)                            NULL,
   skype                VARCHAR(255)                            NULL,
   telegram             VARCHAR(255)                            NULL,
-  role                 VARCHAR(255)  DEFAULT 'customer'        NOT NULL,
+  role                 TINYINT       DEFAULT 1                 NOT NULL,
   last_activity_at     DATETIME      DEFAULT CURRENT_TIMESTAMP NOT NULL,
   failed_tasks_count   INT           DEFAULT 0                 NOT NULL,
   notification_message BOOL          DEFAULT 0                 NOT NULL,
@@ -39,16 +45,56 @@ CREATE TABLE users
   notification_review  BOOL          DEFAULT 0                 NOT NULL,
   show_only_customer   BOOL          DEFAULT 0                 NOT NULL,
   hide_profile         BOOL          DEFAULT 0                 NOT NULL,
-  new_events           BOOL          DEFAULT 0                 NOT NULL,
+  FOREIGN KEY (city_id) REFERENCES cities (id),
+  FOREIGN KEY (avatar_file_id) REFERENCES files (id)
+);
+
+CREATE TABLE user_categories
+(
+  id          INT PRIMARY KEY AUTO_INCREMENT,
+  user_id     INT NOT NULL,
+  category_id INT NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES users (id),
+  FOREIGN KEY (category_id) REFERENCES categories (id)
+);
+
+CREATE TABLE user_photos
+(
+  id      INT PRIMARY KEY AUTO_INCREMENT,
+  user_id INT NOT NULL,
+  file_id INT NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES users (id),
+  FOREIGN KEY (file_id) REFERENCES files (id)
+);
+
+CREATE TABLE tasks
+(
+  id          INT PRIMARY KEY AUTO_INCREMENT,
+  customer_id INT                                NOT NULL,
+  executor_id INT                                NULL,
+  status      TINYINT  DEFAULT 1                 NOT NULL,
+  title       VARCHAR(255)                       NOT NULL,
+  description TEXT                               NULL,
+  category_id INT                                NOT NULL,
+  budget      INT                                NULL,
+  city_id     INT                                NULL,
+  coords_lat  VARCHAR(255)                       NULL,
+  coords_lng  VARCHAR(255)                       NULL,
+  created_at  DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  deadline_at DATETIME                           NULL,
+  FOREIGN KEY (customer_id) REFERENCES users (id),
+  FOREIGN KEY (executor_id) REFERENCES users (id),
+  FOREIGN KEY (category_id) REFERENCES categories (id),
   FOREIGN KEY (city_id) REFERENCES cities (id)
 );
 
-CREATE TABLE photos
+CREATE TABLE task_files
 (
   id      INT PRIMARY KEY AUTO_INCREMENT,
-  user_id INT          NOT NULL,
-  path    VARCHAR(255) NOT NULL,
-  FOREIGN KEY (user_id) REFERENCES users (id)
+  task_id INT NOT NULL,
+  file_id INT NOT NULL,
+  FOREIGN KEY (task_id) REFERENCES tasks (id),
+  FOREIGN KEY (file_id) REFERENCES files (id)
 );
 
 CREATE TABLE favorites
@@ -58,46 +104,6 @@ CREATE TABLE favorites
   whom_id INT NOT NULL,
   FOREIGN KEY (who_id) REFERENCES users (id),
   FOREIGN KEY (whom_id) REFERENCES users (id)
-);
-
-
-CREATE TABLE specializations
-(
-  id          INT PRIMARY KEY AUTO_INCREMENT,
-  user_id     INT NOT NULL,
-  category_id INT NOT NULL,
-  FOREIGN KEY (user_id) REFERENCES users (id),
-  FOREIGN KEY (category_id) REFERENCES categories (id)
-);
-
-CREATE TABLE tasks
-(
-  id          INT PRIMARY KEY AUTO_INCREMENT,
-  customer_id INT                                    NOT NULL,
-  executor_id INT                                    NULL,
-  status      VARCHAR(255) DEFAULT 'new'             NOT NULL,
-  title       VARCHAR(255)                           NOT NULL,
-  description TEXT                                   NULL,
-  category_id INT                                    NOT NULL,
-  budget      INT                                    NULL,
-  city_id     INT                                    NULL,
-  coords_lat  VARCHAR(255)                           NULL,
-  coords_lng  VARCHAR(255)                           NULL,
-  created_at  DATETIME     DEFAULT CURRENT_TIMESTAMP NOT NULL,
-  deadline_at DATETIME                               NULL,
-  FOREIGN KEY (customer_id) REFERENCES users (id),
-  FOREIGN KEY (executor_id) REFERENCES users (id),
-  FOREIGN KEY (category_id) REFERENCES categories (id),
-  FOREIGN KEY (city_id) REFERENCES cities (id)
-);
-
-CREATE TABLE files
-(
-  id       INT PRIMARY KEY AUTO_INCREMENT,
-  task_id  INT          NOT NULL,
-  filename VARCHAR(255) NOT NULL,
-  path     VARCHAR(255) NOT NULL,
-  FOREIGN KEY (task_id) REFERENCES tasks (id)
 );
 
 CREATE TABLE responses
@@ -123,10 +129,11 @@ CREATE TABLE reviews
 
 CREATE TABLE events
 (
-  id      INT PRIMARY KEY AUTO_INCREMENT,
-  user_id INT          NOT NULL,
-  task_id INT          NOT NULL,
-  type    VARCHAR(255) NOT NULL,
+  id        INT PRIMARY KEY AUTO_INCREMENT,
+  user_id   INT            NOT NULL,
+  task_id   INT            NOT NULL,
+  type      TINYINT        NOT NULL,
+  is_viewed BOOL DEFAULT 0 NOT NULL,
   FOREIGN KEY (user_id) REFERENCES users (id),
   FOREIGN KEY (task_id) REFERENCES tasks (id)
 );
@@ -139,9 +146,8 @@ CREATE TABLE messages
   recipient_id INT                                NOT NULL,
   message      TEXT                               NOT NULL,
   created_at   DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  is_viewed    BOOL     DEFAULT 0                 NOT NULL,
   FOREIGN KEY (task_id) REFERENCES tasks (id),
   FOREIGN KEY (sender_id) REFERENCES users (id),
   FOREIGN KEY (recipient_id) REFERENCES users (id)
 )
-
-
