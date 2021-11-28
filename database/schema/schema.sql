@@ -13,8 +13,9 @@ CREATE TABLE categories
 
 CREATE TABLE cities
 (
-  id   INT PRIMARY KEY AUTO_INCREMENT,
-  name VARCHAR(255) NOT NULL
+  id          INT PRIMARY KEY AUTO_INCREMENT,
+  name        VARCHAR(255) NOT NULL,
+  coordinates POINT        NOT NULL
 );
 
 CREATE TABLE files
@@ -78,8 +79,7 @@ CREATE TABLE tasks
   category_id INT                                NOT NULL,
   budget      INT                                NULL,
   city_id     INT                                NULL,
-  coords_lat  VARCHAR(255)                       NULL,
-  coords_lng  VARCHAR(255)                       NULL,
+  coordinates POINT                              NULL,
   created_at  DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
   deadline_at DATETIME                           NULL,
   FOREIGN KEY (customer_id) REFERENCES users (id),
