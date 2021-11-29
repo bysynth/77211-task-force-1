@@ -2,6 +2,10 @@
 
 namespace Tests\Classes;
 
+use App\Classes\Actions\CancelAction;
+use App\Classes\Actions\DoneAction;
+use App\Classes\Actions\RefuseAction;
+use App\Classes\Actions\RespondAction;
 use App\Classes\Task;
 use Exception;
 use PHPUnit\Framework\TestCase;
@@ -9,10 +13,14 @@ use PHPUnit\Framework\TestCase;
 class TaskTest extends TestCase
 {
     private Task $task;
+    private int $customerID;
+    private int $executorID;
 
     protected function setUp(): void
     {
-        $this->task = new Task(1, 2);
+        $this->customerID = 1;
+        $this->executorID = 2;
+        $this->task = new Task($this->customerID, $this->executorID);
     }
 
     /**
@@ -21,46 +29,61 @@ class TaskTest extends TestCase
     public function statusesProvider(): array
     {
         return [
-            [Task::STATUS_CANCELED, Task::ACTION_CANCEL],
-            [Task::STATUS_PROCESSING, Task::ACTION_RESPOND],
-            [Task::STATUS_DONE, Task::ACTION_DONE],
-            [Task::STATUS_FAILED, Task::ACTION_REFUSE]
+            [Task::STATUS_CANCELED, 'cancel'],
+            [Task::STATUS_PROCESSING, 'respond'],
+            [Task::STATUS_DONE, 'done'],
+            [Task::STATUS_FAILED, 'refuse']
         ];
     }
 
     /**
-     * @return array[]
-     */
-    public function actionsProvider(): array
-    {
-        return [
-            [Task::STATUS_NEW, [Task::ACTION_CANCEL, Task::ACTION_RESPOND]],
-            [Task::STATUS_PROCESSING, [Task::ACTION_DONE, Task::ACTION_REFUSE]],
-            [Task::STATUS_CANCELED, []],
-            [Task::STATUS_DONE, []],
-            [Task::STATUS_FAILED, []]
-        ];
-    }
-
-    /**
-     * @param string $status
+     * @param int $status
      * @param string $action
      * @throws Exception
      * @dataProvider statusesProvider
      */
-    public function testGetNextStatus(string $status, string $action)
+    public function testGetNextStatus(int $status, string $action)
     {
-        $this->assertEquals($status,$this->task->getNextStatus($action));
+        $this->assertEquals($status, $this->task->getNextStatus($action));
     }
 
     /**
-     * @param string $status
-     * @param array $actions
      * @throws Exception
-     * @dataProvider actionsProvider
      */
-    public function testGetAvailableAction(string $status, array $actions)
+    public function testGetAvailableActionForCustomer()
     {
-        $this->assertEquals($actions, $this->task->getAvailableAction($status));
+        $currentUserId = $this->customerID;
+        $this->assertInstanceOf(
+            CancelAction::class,
+            $this->task->getAvailableAction(Task::STATUS_NEW, $currentUserId)
+        );
+        $this->assertInstanceOf(
+            DoneAction::class,
+            $this->task->getAvailableAction(Task::STATUS_PROCESSING, $currentUserId)
+        );
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testGetAvailableActionForExecutor()
+    {
+        $currentUserId = $this->executorID;
+        $this->assertInstanceOf(
+            RespondAction::class,
+            $this->task->getAvailableAction(Task::STATUS_NEW, $currentUserId)
+        );
+        $this->assertInstanceOf(
+            RefuseAction::class,
+            $this->task->getAvailableAction(Task::STATUS_PROCESSING, $currentUserId)
+        );
+    }
+
+    public function testGetAvailableActionForTerminatingStatuses()
+    {
+        $currentUserId = $this->customerID;
+        $this->assertNull($this->task->getAvailableAction(Task::STATUS_FAILED, $currentUserId));
+        $this->assertNull($this->task->getAvailableAction(Task::STATUS_DONE, $currentUserId));
+        $this->assertNull($this->task->getAvailableAction(Task::STATUS_CANCELED, $currentUserId));
     }
 }
