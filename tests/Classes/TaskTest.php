@@ -2,17 +2,24 @@
 
 namespace Tests\Classes;
 
+use App\Classes\Actions\ActionConfirm;
+use App\Classes\Actions\ActionCancel;
+use App\Classes\Actions\ActionDone;
+use App\Classes\Actions\ActionRefuse;
+use App\Classes\Actions\ActionRespond;
 use App\Classes\Task;
 use Exception;
 use PHPUnit\Framework\TestCase;
 
 class TaskTest extends TestCase
 {
+    private const CUSTOMER_ID = 1;
+    private const EXECUTOR_ID = 2;
     private Task $task;
 
     protected function setUp(): void
     {
-        $this->task = new Task(1, 2);
+        $this->task = new Task(self::CUSTOMER_ID, self::EXECUTOR_ID);
     }
 
     /**
@@ -21,10 +28,11 @@ class TaskTest extends TestCase
     public function statusesProvider(): array
     {
         return [
-            [Task::STATUS_CANCELED, Task::ACTION_CANCEL],
-            [Task::STATUS_PROCESSING, Task::ACTION_RESPOND],
-            [Task::STATUS_DONE, Task::ACTION_DONE],
-            [Task::STATUS_FAILED, Task::ACTION_REFUSE]
+            [Task::STATUS_NEW, 'respond'],
+            [Task::STATUS_CANCELED, 'cancel'],
+            [Task::STATUS_PROCESSING, 'confirm'],
+            [Task::STATUS_DONE, 'done'],
+            [Task::STATUS_FAILED, 'refuse']
         ];
     }
 
@@ -34,33 +42,37 @@ class TaskTest extends TestCase
     public function actionsProvider(): array
     {
         return [
-            [Task::STATUS_NEW, [Task::ACTION_CANCEL, Task::ACTION_RESPOND]],
-            [Task::STATUS_PROCESSING, [Task::ACTION_DONE, Task::ACTION_REFUSE]],
-            [Task::STATUS_CANCELED, []],
-            [Task::STATUS_DONE, []],
-            [Task::STATUS_FAILED, []]
+            [[new ActionConfirm(), new ActionCancel()], Task::STATUS_NEW, self::CUSTOMER_ID],
+            [[new ActionRespond()], Task::STATUS_NEW, self::EXECUTOR_ID],
+            [[new ActionDone()], Task::STATUS_PROCESSING, self::CUSTOMER_ID],
+            [[new ActionRefuse()], Task::STATUS_PROCESSING, self::EXECUTOR_ID],
+            [[], Task::STATUS_FAILED, self::CUSTOMER_ID],
+            [[], Task::STATUS_DONE, self::CUSTOMER_ID],
+            [[], Task::STATUS_CANCELED, self::CUSTOMER_ID],
         ];
     }
 
     /**
-     * @param string $status
+     * @param int $status
      * @param string $action
      * @throws Exception
      * @dataProvider statusesProvider
      */
-    public function testGetNextStatus(string $status, string $action)
+    public function testGetNextStatus(int $status, string $action)
     {
-        $this->assertEquals($status,$this->task->getNextStatus($action));
+        $this->assertEquals($status, $this->task->getNextStatus($action));
     }
 
+
     /**
-     * @param string $status
      * @param array $actions
+     * @param int $status
+     * @param int $currentUserId
      * @throws Exception
      * @dataProvider actionsProvider
      */
-    public function testGetAvailableAction(string $status, array $actions)
+    public function testGetAvailableActions(array $actions, int $status, int $currentUserId)
     {
-        $this->assertEquals($actions, $this->task->getAvailableAction($status));
+        $this->assertEquals($actions, $this->task->getAvailableActions($status, $currentUserId));
     }
 }
