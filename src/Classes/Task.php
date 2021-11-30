@@ -2,11 +2,12 @@
 
 namespace App\Classes;
 
-use App\Classes\Actions\BaseAction;
-use App\Classes\Actions\CancelAction;
-use App\Classes\Actions\DoneAction;
-use App\Classes\Actions\RefuseAction;
-use App\Classes\Actions\RespondAction;
+use App\Classes\Actions\AbstractAction;
+use App\Classes\Actions\ActionCancel;
+use App\Classes\Actions\ActionConfirm;
+use App\Classes\Actions\ActionDone;
+use App\Classes\Actions\ActionRefuse;
+use App\Classes\Actions\ActionRespond;
 use Exception;
 
 class Task
@@ -18,8 +19,9 @@ class Task
     public const STATUS_FAILED = 5;
 
     public const ACTION_STATUS_MAP = [
+        'confirm' => self::STATUS_PROCESSING,
         'cancel' => self::STATUS_CANCELED,
-        'respond' => self::STATUS_PROCESSING,
+        'respond' => self::STATUS_NEW,
         'done' => self::STATUS_DONE,
         'refuse' => self::STATUS_FAILED
     ];
@@ -68,40 +70,44 @@ class Task
     /**
      * @param int $status
      * @param int $currentUserId
-     * @return BaseAction|null
+     * @return array
      * @throws Exception
      */
-    public function getAvailableAction(int $status, int $currentUserId): ?BaseAction
+    public function getAvailableActions(int $status, int $currentUserId): array
     {
-        $action = null;
+        $actions = [];
 
         switch ($status) {
             case self::STATUS_NEW:
-                if (CancelAction::isCurrentUserCanAct($this->executorId, $this->customerId, $currentUserId)) {
-                    $action = new CancelAction();
+                if (ActionConfirm::isCurrentUserCanAct($this->executorId, $this->customerId, $currentUserId)) {
+                    $actions[] = new ActionConfirm();
                 }
 
-                if (RespondAction::isCurrentUserCanAct($this->executorId, $this->customerId, $currentUserId)) {
-                    $action = new RespondAction();
+                if (ActionCancel::isCurrentUserCanAct($this->executorId, $this->customerId, $currentUserId)) {
+                    $actions[] = new ActionCancel();
+                }
+
+                if (ActionRespond::isCurrentUserCanAct($this->executorId, $this->customerId, $currentUserId)) {
+                    $actions[] = new ActionRespond();
                 }
                 break;
             case self::STATUS_PROCESSING:
-                if (DoneAction::isCurrentUserCanAct($this->executorId, $this->customerId, $currentUserId)) {
-                    $action = new DoneAction();
+                if (ActionDone::isCurrentUserCanAct($this->executorId, $this->customerId, $currentUserId)) {
+                    $actions[] = new ActionDone();
                 }
 
-                if (RefuseAction::isCurrentUserCanAct($this->executorId, $this->customerId, $currentUserId)) {
-                    $action = new RefuseAction();
+                if (ActionRefuse::isCurrentUserCanAct($this->executorId, $this->customerId, $currentUserId)) {
+                    $actions[] = new ActionRefuse();
                 }
                 break;
             case self::STATUS_FAILED:
             case self::STATUS_DONE:
             case self::STATUS_CANCELED:
-                return null;
+                return [];
             default:
                 throw new Exception("Unknown status $status");
         }
 
-        return $action;
+        return $actions;
     }
 }
