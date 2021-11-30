@@ -2,17 +2,26 @@
 
 namespace App\Classes\Actions;
 
-abstract class BaseAction
+abstract class AbstractAction
 {
-    /**
-     * @return string
-     */
-    abstract public function getName(): string;
+    protected string $name;
+    protected string $code;
 
     /**
      * @return string
      */
-    abstract public function getInnerName(): string;
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCode(): string
+    {
+        return $this->code;
+    }
 
     /**
      * @param int $executorId
