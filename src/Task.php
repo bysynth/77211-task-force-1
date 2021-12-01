@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Classes;
+namespace App;
 
-use App\Classes\Actions\AbstractAction;
-use App\Classes\Actions\ActionCancel;
-use App\Classes\Actions\ActionConfirm;
-use App\Classes\Actions\ActionDone;
-use App\Classes\Actions\ActionRefuse;
-use App\Classes\Actions\ActionRespond;
+use App\Actions\ActionCancel;
+use App\Actions\ActionConfirm;
+use App\Actions\ActionDone;
+use App\Actions\ActionRefuse;
+use App\Actions\ActionRespond;
 use Exception;
 
 class Task
