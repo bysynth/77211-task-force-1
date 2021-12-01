@@ -7,6 +7,8 @@ use App\Actions\ActionCancel;
 use App\Actions\ActionDone;
 use App\Actions\ActionRefuse;
 use App\Actions\ActionRespond;
+use App\Exceptions\ActionException;
+use App\Exceptions\StatusException;
 use App\Task;
 use Exception;
 use PHPUnit\Framework\TestCase;
@@ -74,5 +76,19 @@ class TaskTest extends TestCase
     public function testGetAvailableActions(array $actions, int $status, int $currentUserId)
     {
         $this->assertEquals($actions, $this->task->getAvailableActions($status, $currentUserId));
+    }
+
+    public function testActionException()
+    {
+        $fakeAction = 'fake';
+        $this->expectException(ActionException::class);
+        $this->task->getNextStatus($fakeAction);
+    }
+
+    public function testStatusException()
+    {
+        $fakeStatus = '999';
+        $this->expectException(StatusException::class);
+        $this->task->getAvailableActions($fakeStatus, self::CUSTOMER_ID);
     }
 }
