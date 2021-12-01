@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Classes;
+namespace App;
 
-use App\Classes\Actions\AbstractAction;
-use App\Classes\Actions\ActionCancel;
-use App\Classes\Actions\ActionConfirm;
-use App\Classes\Actions\ActionDone;
-use App\Classes\Actions\ActionRefuse;
-use App\Classes\Actions\ActionRespond;
-use Exception;
+use App\Actions\ActionCancel;
+use App\Actions\ActionConfirm;
+use App\Actions\ActionDone;
+use App\Actions\ActionRefuse;
+use App\Actions\ActionRespond;
+use App\Exceptions\ActionException;
+use App\Exceptions\StatusException;
 
 class Task
 {
@@ -57,21 +57,21 @@ class Task
     /**
      * @param string $action
      * @return string
-     * @throws Exception
+     * @throws ActionException
      */
     public function getNextStatus(string $action): string
     {
         return array_key_exists(
             $action,
             self::ACTION_STATUS_MAP
-        ) ? self::ACTION_STATUS_MAP[$action] : throw new Exception("Unknown action $action");
+        ) ? self::ACTION_STATUS_MAP[$action] : throw new ActionException("Unknown action $action");
     }
 
     /**
      * @param int $status
      * @param int $currentUserId
      * @return array
-     * @throws Exception
+     * @throws StatusException
      */
     public function getAvailableActions(int $status, int $currentUserId): array
     {
@@ -105,7 +105,7 @@ class Task
             case self::STATUS_CANCELED:
                 return [];
             default:
-                throw new Exception("Unknown status $status");
+                throw new StatusException("Unknown status $status");
         }
 
         return $actions;
