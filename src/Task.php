@@ -64,7 +64,7 @@ class Task
         return array_key_exists(
             $action,
             self::ACTION_STATUS_MAP
-        ) ? self::ACTION_STATUS_MAP[$action] : throw new ActionException("Unknown action $action");
+        ) ? self::ACTION_STATUS_MAP[$action] : throw new ActionException("Неизвестное действие $action");
     }
 
     /**
@@ -105,7 +105,7 @@ class Task
             case self::STATUS_CANCELED:
                 return [];
             default:
-                throw new StatusException("Unknown status $status");
+                throw new StatusException("Неизвестный статус $status");
         }
 
         return $actions;
