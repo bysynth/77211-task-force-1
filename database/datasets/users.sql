@@ -1,0 +1,21 @@
+INSERT INTO users (email, name, password, birthdate, info, phone, skype, telegram, city_id)
+VALUES
+('kbuttress0@1und1.de', 'Karrie Buttress', 'JcfoKBYAB4k', '1989-03-05', 'Pellentesque ultrices mattis odio.', '643(020)997-43-02', 'mobile', 'mobile', 271),
+('baymer1@hp.com', 'Bob Aymer', 'ZEE54kg', '1989-12-30', 'Morbi a ipsum. Integer a nibh. In quis justo.', '6(9452)506-01-32', 'Re-engineered', 'Re-engineered', 645),
+('emollon3@bloglovin.com', 'Emalee Mollon', 'XUIeJ693h', '1989-04-08', 'Suspendisse potenti.', '0(4386)753-40-65', 'Grass-roots', 'Grass-roots', 82),
+('mmulberry4@cmu.edu', 'Maria Mulberry', 'oWspnl', '1989-04-18', 'Morbi quis tortor id nulla ultrices aliquet. Maecenas leo odio, condimentum id, luctus nec, molestie sed, justo.', '9(19)716-21-22', 'fault-tolerant', 'fault-tolerant', 201),
+('lby5@mozilla.com', 'Levey By', 'GdtcUU', '1989-03-20', 'Maecenas tristique, est et tempus semper, est quam pharetra magna, ac consequat metus sapien ut nunc. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris viverra diam vitae quam.', '6(362)903-47-97', 'Team-oriented', 'Team-oriented', 337),
+('beates6@last.fm', 'Baron Eates', 'UQw6VeA', '1989-12-13', 'Sed vel enim sit amet nunc viverra dapibus. Nulla suscipit ligula in lacus.', '9(724)333-04-93', 'portal', 'portal', 1051),
+('tvink7@fotki.com', 'Trip Vink', '49znXd7haFGz', '1989-01-14', 'Pellentesque viverra pede ac diam. Cras pellentesque volutpat dui. Maecenas tristique, est et tempus semper, est quam pharetra magna, ac consequat metus sapien ut nunc.', '26(8125)054-39-22', 'intermediate', 'intermediate', 919),
+('bterbeck8@about.me', 'Boonie Terbeck', 'unCjJTF7sjs', '1989-02-03', 'Morbi ut odio.', '42(14)088-39-33', 'local area network', 'local area network', 772),
+('atraviss9@auda.org.au', 'Alonzo Traviss', 'dLuVMAg', '1989-05-23', 'Suspendisse ornare consequat lectus. In est risus, auctor sed, tristique in, tempus sit amet, sem. Fusce consequat.', '9(995)204-25-96', 'upward-trending', 'upward-trending', 902),
+('nwitteringa@google.com.br', 'Natassia Wittering', 'tQlUG4n', '1989-07-06', 'Phasellus sit amet erat. Nulla tempus. Vivamus in felis eu sapien cursus vestibulum.', '29(71)967-95-53', 'grid-enabled', 'grid-enabled', 279),
+('fbrookeb@nba.com', 'Felice Brooke', 's9y9Mcfgy1g', '1903-04-16', 'Vivamus metus arcu, adipiscing molestie, hendrerit at, vulputate vitae, nisl. Aenean lectus. Pellentesque eget nunc.', '87(8377)899-22-52', 'background', 'background', 940),
+('cviccaryc@amazon.co.uk', 'Carlen Viccary', '9qd747vh', '1989-11-07', 'Quisque ut erat. Curabitur gravida nisi at nibh. In hac habitasse platea dictumst.', '048(10)061-02-73', 'challenge', 'challenge', 311),
+('hgethingsd@sogou.com', 'Hendrik Gethings', 'zzN5c4', '1989-02-13', 'Pellentesque at nulla. Suspendisse potenti. Cras in purus eu magna vulputate luctus.', '605(332)122-44-76', 'coherent', 'coherent', 52),
+('dgirodiase@stanford.edu', 'Dunc Girodias', 'j9QW6GQI', '1989-07-07', 'Cras pellentesque volutpat dui.', '71(93)349-54-12', 'neutral', 'neutral', 231),
+('btanmanf@smh.com.au', 'Bibbie Tanman', '1aukKNEIneq', '1989-09-29', 'Aliquam erat volutpat. In congue.', '987(318)408-64-33', 'Programmable', 'Programmable', 662),
+('bbartolettig@simplemachines.org', 'Barnabas Bartoletti', '3chTNtqhoo', '1989-03-19', 'Nulla ac enim. In tempor, turpis nec euismod scelerisque, quam turpis adipiscing lorem, vitae mattis nibh ligula nec sem. Duis aliquam convallis nunc.', '7(29)524-01-94', 'encompassing', 'encompassing', 726),
+('nculliph@fc2.com', 'Nixie Cullip', '2UdKIR2f', '1989-09-29', 'Suspendisse potenti.', '21(198)070-57-91', 'knowledge base', 'knowledge base', 980),
+('mpimblotti@xing.com', 'Matilde Pimblott', 'nGZ8disdg', '1989-12-21', 'Phasellus sit amet erat.', '2(396)962-11-23', 'dynamic', 'dynamic', 278),
+('askurrayj@un.org', 'Al Skurray', 'bL9tAf', '1989-09-04', 'Cras pellentesque volutpat dui.', '6(3804)998-79-35', 'solution', 'solution', 114);
